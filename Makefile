@@ -1,13 +1,16 @@
-.PHONY: run shell build up down kill
+.PHONY: build run shell up down test coverage install
 
 build:
 	docker compose build
 
-run:
-	docker compose run --rm app
+install:
+	docker compose run --rm app composer install
+
+run: install
+	docker compose run --rm app php app.php
 
 shell:
-	docker compose run --rm app sh
+	docker compose run --rm app bash
 
 up:
 	docker compose up -d
@@ -15,5 +18,8 @@ up:
 down:
 	docker compose down
 
-kill:
-	docker compose kill
+test: install
+	docker compose run --rm app composer test
+
+coverage: install
+	docker compose run --rm app composer coverage
